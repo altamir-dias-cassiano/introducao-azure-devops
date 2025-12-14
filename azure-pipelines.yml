@@ -7,52 +7,50 @@ name: CI-CD
 
 trigger:
 - main
+- azure-pipelines
 
 pool:
   vmImage: ubuntu-latest
 
-stages:
+stages: 
   - stage: CI
     displayName: 'CI - Pipeline de CI'
     jobs:
       - job: BuildAndTest
-        displayName: 'Build do Projeto e Teste'
+        displayName: 'Build do Projeto e Teste do Projeto'
         steps:
-        - task: DotNetCoreCLI@2
-          displayName: Build
-          inputs:
-            command: 'build'
-            projects: './src/Review-Filmes.sln'
-        - task: DotNetCoreCLI@2
-          displayName: Teste
-          inputs:
-            command: 'test'
-            projects: './src/Review-Filmes.Test.Unit/Review-Filmes.Test.Unit.csproj'
+          - task: DotNetCoreCLI@2
+            displayName: Build
+            inputs:
+              command: 'build'
+              projects: './src/Review-Filmes.sln'
+          - task: DotNetCoreCLI@2
+            displayName: Test
+            inputs:
+              command: 'test'
+              projects: './src/Review-Filmes.Test.Unit/Review-Filmes.Test.Unit.csproj'
       - job: Release
-        displayName: 'Release Docker'
+        displayName: 'Release Docker'     
         dependsOn: BuildAndTest
         steps:
-        - task: Docker@2
-          inputs:
-            containerRegistry: 'DockerHub'
-            repository: 'fabricioveronez/live-azure-devops'
-            command: 'buildAndPush'
-            Dockerfile: './src/Review-Filmes.Web/Dockerfile'
-            buildContext: './src'
-            tags: |
-              $(Build.BuildId)
-              latest
-  - stage: CD
-    displayName: 'CD - Pipeline de CD'
+            - task: Docker@2
+              inputs:
+                containerRegistry: 'DockerHub'
+                repository: 'altamirdias/live-azure-devops'
+                command: 'buildAndPush'
+                Dockerfile: './src/Review-Filmes.Web/Dockerfile'
+                buildContext: './src'
+                tags: |
+                  $(Build.BuildId)
+                  latest
+  - stage: Deploy
+    displayName: 'Deploy K8S - Azure'
     jobs:
-    - job: Deploy
-      displayName: 'Deploy no Kubernetes'
-      steps:
-      - task: KubernetesManifest@1
-        inputs:
-          action: 'deploy'
-          connectionType: 'kubernetesServiceConnection'
-          kubernetesServiceConnection: 'k8s'
-          namespace: 'default'
-          manifests: './k8s/deployment.yaml'
-          containers: 'fabricioveronez/live-azure-devops:$(Build.BuildId)'
+      - job: K8S
+        displayName: 'K8S À SER FEITO'
+        steps:           
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |                                
+                Write-Host "to-do: TODO = Create account to student and test at AZURE Cloud"
