@@ -7,15 +7,19 @@ name: CI-CD
 
 trigger:
 - main
+- azure-pipelines
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, tes, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'  
+stages: 
+  - stage: CI
+    displayName: 'CI - Pipeline de CI'
+    jobs:
+      - job: Build
+        displayName: 'Build do Projeto'
+        steps:
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'build'
+              projects: './src/Review-Filmes.sln'
