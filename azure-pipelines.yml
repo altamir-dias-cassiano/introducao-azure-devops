@@ -43,3 +43,14 @@ stages:
                 tags: |
                   $(Build.BuildId)
                   latest
+  - stage: Deploy
+    displayName: 'Deploy K8S - Azure'
+    jobs:
+      - job: K8S
+        displayName: 'K8S À SER FEITO'
+        steps:           
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |                                
+                Write-Host "to-do: TODO = Create account to student and test at AZURE Cloud"
