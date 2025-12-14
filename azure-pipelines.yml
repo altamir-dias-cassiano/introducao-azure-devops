@@ -16,7 +16,7 @@ stages:
   - stage: CI
     displayName: 'CI - Pipeline de CI'
     jobs:
-      - job: Build
+      - job: BuildAndTest
         displayName: 'Build do Projeto e Teste do Projeto'
         steps:
           - task: DotNetCoreCLI@2
@@ -29,3 +29,17 @@ stages:
             inputs:
               command: 'test'
               projects: './src/Review-Filmes.Test.Unit/Review-Filmes.Test.Unit.csproj'
+      - job: Release
+        displayName: 'Release Docker'     
+        dependsOn: BuildAndTest
+        steps:
+            - task: Docker@2
+              inputs:
+                containerRegistry: 'DockerHub'
+                repository: 'altamirdias/live-azure-devops'
+                command: 'buildAndPush'
+                Dockerfile: './src/Review-Filmes.Web/Dockerfile'
+                buildContext: './src'
+                tags: |
+                  $(Build.BuildId)
+                  latest
