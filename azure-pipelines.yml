@@ -9,7 +9,9 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  #vmImage: ubuntu-latest
+  name: VirtualBox
+
 
 stages:
   - stage: CI
