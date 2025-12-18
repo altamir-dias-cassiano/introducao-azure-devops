@@ -22,9 +22,11 @@ stages:
         displayName: 'install net core'
         steps:
         - task: UseDotNet@2
+          displayName: 'Instalar .NET SDK 8.0.x'
           inputs:
-            packageType: 'runtime'
-            version: '8.0'
+            packageType: 'sdk'
+            version: '8.0.x'
+            installationPath: $(Agent.ToolsDirectory)/dotnet
       - job: BuildAndTest
         displayName: 'Build do Projeto e Teste'
         dependsOn: installNet
