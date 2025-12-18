@@ -17,6 +17,14 @@ stages:
   - stage: CI
     displayName: 'CI - Pipeline de CI'
     jobs:
+
+      - job: installNet
+        displayName: 'install net core'
+        steps:
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'runtime'
+            version: 'net8.0'
       - job: BuildAndTest
         displayName: 'Build do Projeto e Teste'
         steps:
